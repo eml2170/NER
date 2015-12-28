@@ -31,18 +31,15 @@ public class Viterbi {
 	private static final String NEWLINE = "\n";
 	private static final String SPACE = " ";
 	
-	
-//	private static final String INITCAP = "initCap";
 	private static final String OTHERNUM = "otherNum";
 	private static final String CONTAINS_DIGIT_AND_DASH = "containsDigitAndSlash";
 	private static final String CONTAINS_DIGIT_AND_PUNCTUATION = "containsDigitAndPunctuation";
-	//private static final String ALLCAPS = "allCaps";
-	//private static final String PUNCTUATION = "punctuation";
+	
 	
 	public Viterbi(String counts_file){
 		te = new TrigramEstimator(counts_file);
 		ep = new EmissionProbability(counts_file);
-		counter = new InfrequentWordMapper("ner.counts");
+		counter = new InfrequentWordMapper("../data/ner.counts");
 		et = new EntityTagger(ep, counter);
 	}
 	
@@ -68,8 +65,6 @@ public class Viterbi {
 		for(int k = 1; k <= n; k++){
 			String xk = sentence[k-1];
 			
-			
-			
 			//Replace rare word with RARE symbol
 			if(counter.hasNumber(xk)){
 				if(counter.hasNumberAndDash(xk))
@@ -79,18 +74,10 @@ public class Viterbi {
 				else
 					xk = OTHERNUM;
 			}
-//			else if(counter.isPunctuation(xk))
-//				xk = PUNCTUATION;
-//			else if(counter.isAllCaps(xk))
-//				xk = ALLCAPS;
-//			else if(counter.isInitCap(xk)){
-//				xk = INITCAP;
-//			}
+
 			else if(counter.isRare(xk)){
-				//System.out.println(xk + "\n");
 				xk = RARE;}
 			
-//			
 			
 			for(Tag u : K(k-1)){
 				for(Tag v : K(k)){
@@ -178,10 +165,7 @@ public class Viterbi {
 		double max = -Double.MAX_VALUE;
 		Tag argmaxu = null;
 		Tag argmaxv = null;
-//		double[][] last_matrix = pi[n];
-//		for(int i = 0; i < last_matrix.length; i++){
-//			System.out.println(Arrays.toString(last_matrix[i]));
-//		}
+
 		for(Tag u :k){
 			for(Tag v : k){
 				
@@ -215,15 +199,10 @@ public class Viterbi {
 	
 	public static void main(String[] args) throws IOException{
 		
-		//String[] sentence = new String[]{"The", "man", "saw", "the", "woman"};
-		Viterbi v = new Viterbi("ner_mapped.counts");
-//		String[] sentence = new String[]{"The", "European", "Commission", "said", "on", "Thursday",
-//				"it", "disagreed", "with", "German", "advice", "."};
-//		Tag[] tags = v.tag(sentence);
-//		System.out.println(Arrays.toString(v.output(tags)));
+		Viterbi v = new Viterbi("../data/ner_mapped.counts");
 		
 		List<String[]> sentences = new ArrayList<String[]>();
-		Scanner scanner = new Scanner(new File("ner_dev.dat"));
+		Scanner scanner = new Scanner(new File("../data/ner_dev.dat"));
 		
 		//Extract all sentences
 		List<String> sentence = new ArrayList<String>();
